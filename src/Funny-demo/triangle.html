@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Triangle Optical Illusion</title>
+    <style type="text/css">
+        body { overflow: hidden; }
+        .wrapper {
+            position: relative;
+            margin: 5em auto;
+            padding: 0;
+            width: 13em; height: 5em;
+            box-shadow: inset -1px -1px 0 black;
+            list-style: none;
+            background: linear-gradient(black 2.5%, transparent 1px),
+            linear-gradient(90deg, black 2.5%, transparent 1px);
+            background-size: 1em 1em;
+            font: 2.5em Verdana, sans-serif;
+        }
+        .piece {
+            position: absolute;
+            right: 0; bottom: 0;
+            opacity: .85;
+            animation: ani 4s infinite linear alternate;
+        }
+        .triangle { overflow: hidden; transform-origin: 0 100%; }
+        .piece:before {
+            position: absolute;
+            content: '';
+        }
+        .triangle:before {
+            width: inherit; height: inherit;
+            transform-origin: inherit;
+        }
+        .block { width: 5em; height: 1em; }
+        .block:before { height: 1em; background: inherit; }
+        .triangle-big {
+            right: 5em;
+            width: 8em; height: 3em;
+            transform: skewX(-69.444deg); /* -arctan(width/height) */
+            animation-name: ani-triangle-big;
+        }
+        .triangle-big:before {
+            background: crimson;
+            transform: skewX(69.444deg);  /* arctan(width/height) */
+        }
+        .triangle-small {
+            bottom: 3em;
+            width: 5em; height: 2em;
+            transform: skewX(-68.2deg); /* -arctan(width/height) */
+            animation-name: ani-triangle-small;
+        }
+        .triangle-small:before {
+            background: mediumvioletred;
+            transform: skewX(68.2deg); /* arctan(width/height) */
+        }
+        .block-high {
+            bottom: 2em;
+            background: darkmagenta;
+            animation-name: ani-block-high;
+        }
+        .block-high:before {
+            top: 100%;
+            width: 2em;
+        }
+        .block-low {
+            background: darkviolet;
+        }
+        .block-low:before {
+            right: 0; bottom: 100%;
+            width: 3em;
+        }
+
+        @keyframes ani-triangle-big {
+            0%, 25% {
+                right: 5em; bottom: 0;
+                transform: rotate(0deg) skewX(-69.444deg);
+            }
+            75%, 100% {
+                right: 0; bottom: 2em;
+                transform: rotate(360deg) skewX(-69.444deg);
+            }
+        }
+        @keyframes ani-triangle-small {
+            0%, 25% {
+                right: 0; bottom: 3em;
+                transform: rotate(0deg) skewX(-68.2deg);
+            }
+            75%, 100% {
+                right: 8em; bottom: 0;
+                transform: rotate(-360deg) skewX(-68.2deg);
+            }
+        }
+        @keyframes ani-block-high {
+            0%, 25% { right: 0; bottom: 2em; }
+            75%, 100% { right: 3em; bottom: 1em; }
+        }
+    </style>
+</head>
+<body>
+<ul class='wrapper'>
+    <li class='piece triangle triangle-big'></li>
+    <li class='piece triangle triangle-small'></li>
+    <li class='piece block block-low'></li>
+    <li class='piece block block-high'></li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "css3-test",
+  "version": "0.0.1",
+  "description": "This is a collection of HTML5 and CSS3 cool effects from internet.",
+  "main": "app.js",
+  "dependencies": {
+    "easy-router": "^2.0.10"
+  },
+  "scripts": {
+    "test": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gnipbao/css3-test.git"
+  },
+  "keywords": [
+    "html5",
+    "css3",
+    "demo",
+    "cool"
+  ],
+  "author": "Gnip",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Gnipbao/css3-test/issues"
+  },
+  "homepage": "https://github.com/Gnipbao/css3-test#readme"
+}

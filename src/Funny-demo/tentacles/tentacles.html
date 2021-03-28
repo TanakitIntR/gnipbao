@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Crazier Tentacles</title>
+		<script type="text/javascript" src="js/gee.min.js"></script>
+		<script type="text/javascript" src="js/DAT.GUI.min.js"></script>
+		<script type="text/javascript">
+			window.onload = function() {
+				this.segLength = 10;
+				this.numSegments = 50;
+				this.numIterations = 50;
+				this.waviness = .5;
+				this.waveFreq = 1;
+				this.bendItr = 1;
+				this.shiftSpeed = 0;
+				this.damping = .0001;
+				var gui = new DAT.GUI({
+					width:400
+				});
+				gui.add(this, "segLength", 1, 100).name("Segment Length");
+				gui.add(this, "numIterations", 1, 100).name("Number of Iterations");
+				gui.add(this, "numSegments", 5, 100).name("Number of Segments");
+				gui.add(this, "waviness", 0,2).name("Waviness");
+				gui.add(this, "waveFreq", 0,1).name("Wave Frequency");
+				gui.add(this, "shiftSpeed", 0, .1).name("Shift speed");
+				gui.add(this, "damping", 0, .1).name("Damping");
+
+				var pressed = false;
+				// initialize graphics
+				var g = new GEE({
+					fullscreen: true,
+					context: '2d',
+					container: document.getElementById("backgroundHolder"),
+					fallback: function() {
+						alert("Canvas creation failed")
+					}
+				});
+
+				// initialize stack
+				var stack = [];
+				for (var i = 0; i < 100; i++) {
+					stack[i] = new Node(0,-i*segLength,.1,0);
+				}
+				var shift = 0;
+
+				this.reset = function() {
+					for (var i = 0; i < 100; i++) {
+						stack[i].u = 0;
+						stack[i].v = 0;
+					}
+				}
+				gui.add(this, "reset").name("Zero Velocities");
+
+				g.draw = function() {
+					var ctx = g.ctx;
+					ctx.clearRect(0,0,g.width,g.height);
+					ctx.strokeStyle = "rgba("+0+","+0+","+0+","+.3+")";
+					for (var itr = 0; itr < numIterations; itr++) {
+						shift += shiftSpeed;
+						// anchor first node
+						stack[0].x = 0;
+						stack[0].y = 0;
+						stack[0].u = 0;
+						stack[0].v = 0;
+						stack[1].x = 0;
+						stack[1].y = -segLength;
+						stack[1].u = 0;
+						stack[1].v = 0;
+
+						// move top node to mouse
+						if (pressed) {
+							var n = stack[parseInt(numSegments)-1];
+							n.x = g.pmouseX-g.width/2+itr/numIterations*(g.mouseX-g.pmouseX);
+							n.y = g.pmouseY-g.height/2+itr/numIterations*(g.mouseY-g.pmouseY);
+							n.u = 0;
+							n.v = 0;
+						}
+
+						// distance constraints
+						for (var i = 0; i < numSegments-1; i++) {
+							var a = stack[i];
+							var b = stack[i+1];
+							var vx = b.x-a.x;
+							var vy = b.y-a.y;
+							var vlen = Math.sqrt(vx*vx+vy*vy);
+							var f = .5*(segLength-vlen)/vlen;
+							var fx = vx*f;
+							var fy = vy*f;
+							a.x -= fx;
+							a.u -= fx;
+							a.y -= fy;
+							a.v -= fy;
+							b.x += fx;
+							b.u += fx;
+							b.y += fy;
+							b.v += fy;
+						}
+
+						// angle constraints
+						for (var j = 0; j < bendItr; j++) {
+							for (var i = 0; i < numSegments-2; i++) {
+								var a = stack[i];
+								var b = stack[i+1];
+								var c = stack[i+2];
+								var vx = b.x-a.x;
+								var vy = b.y-a.y;
+								var vlen = Math.sqrt(vx*vx+vy*vy);
+								var dx = vx/vlen;
+								var dy = vy/vlen;
+								vx = c.x-b.x;
+								vy = c.y-b.y;
+								vlen = Math.sqrt(vx*vx+vy*vy);
+								var dx2 = vx/vlen;
+								var dy2 = vy/vlen;
+
+								var dp = dx*dx2+dy*dy2;
+								var cp = -dy*dx2+dx*dy2;
+								var ang = waviness*Math.sin(i*waveFreq+shift)-segLength/10*Math.atan2(cp,dp);
+								var fx = -dy*ang;
+								var fy = dx*ang;
+								a.x += fx;
+								a.y += fy;
+								a.u += fx;
+								a.v += fy;
+								b.x -= fx;
+								b.y -= fy;
+								b.u -= fx;
+								b.v -= fy;
+								fx = -dy2*ang;
+								fy = dx2*ang;
+								c.x += fx;
+								c.y += fy;
+								c.u += fx;
+								c.v += fy;
+								b.x -= fx;
+								b.y -= fy;
+								b.u -= fx;
+								b.v -= fy;
+							}
+						}
+
+						// update
+						for (var i = 0; i < numSegments; i++) {
+							var n = stack[i];
+							n.x += n.u;
+							n.y += n.v;
+							n.u *= 1-damping;
+							n.v *= 1-damping;
+						}
+						ctx.save();
+						ctx.translate(g.width/2,g.height/2);
+						for (var j=0;j<6;j++) {
+							ctx.rotate(Math.PI/3);
+							ctx.beginPath();
+							ctx.moveTo(0,0);
+							for (var i = 0; i < numSegments; i++) {
+								var a = stack[i];
+								ctx.lineTo(a.x,a.y);
+							}
+							ctx.stroke();
+						}
+						ctx.restore();
+					}
+				};
+				g.mousedown = function() {
+					pressed = true;
+				};
+				g.mouseup = function() {
+					pressed = false;
+				};
+				g.mouseout = function() {
+					pressed = false;
+				};
+			}
+			function Node(x, y, u, v) {
+				this.x = x;
+				this.y = y;
+				this.u = u;
+				this.v = v;
+				this.dx = 0;
+				this.dy = 0;
+			}
+		</script>
+		<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+		<script type="text/javascript">
+			stLight.options({
+				publisher:'f58db6d2-7b59-41f9-8741-ccd9df3a788c'
+			});
+		</script>
+		<script type="text/javascript">
+			/* <![CDATA[ */
+			(function() {
+				var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+				s.type = 'text/javascript';
+				s.async = true;
+				s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
+				t.parentNode.insertBefore(s, t);
+			})();
+			/* ]]> */
+		</script>
+	</head>
+	<body>
+		<div id="backgroundHolder" style="position: fixed; top: 0px; left:0px; z-index:-1">
+		</div>
+	</body>
+</html>

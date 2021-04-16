@@ -7,7 +7,11 @@ git clone https://github.com/Gnipbao/css3-test.git
 Enter the project directory and run the script
 ```bash
 npm install
+```
+```bash
 npm run test
 ```
-Then visit [http://127.0.0.1:3006/menu.html] in your browser ;-) 
+Then visit [http://127.0.0.1:3006/menu.html] in your browser for local
+
+[Online demo](http://gnipbao.github.io/css3-test/menu.html)
 

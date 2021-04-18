@@ -1,0 +1,102 @@
+#gift-box {
+	position: relative;
+	left: 80px;
+	top: 130px;
+	width: 20px;
+	height: 20px;
+	overflow: visible;
+}
+
+#gift-box>img {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+#boxlid {
+	position: absolute;
+	left: 0;
+	top: 0;
+
+	margin: 0;
+	padding: 0;
+	width: 200px;
+	height: 200px;
+	overflow: hidden;
+	background: url(/src/Funny-demo/3DGoogle/img/boxf3.png);
+	font-size: 13px;
+}
+
+#front-panel {
+	position: absolute;
+	left: 0;
+	top: 0;
+
+	margin: 0;
+	padding: 0;
+	width: 200px;
+	height: 80px;
+	overflow: hidden;
+}
+
+#resize-handle {
+	display: block;
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	left: 0;
+	top: 0;
+
+	background: url(/src/Funny-demo/3DGoogle/img/handle.gif) no-repeat top left;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+
+#boxlid .box-label {
+	color: #543;
+	padding: 9px 2px;
+	text-align: center;
+}
+
+#bottom-panel, #bottom-inner {
+	position: absolute;
+	left: 0;
+	top: 0;
+
+	width: 200px;
+	height: 200px;
+	overflow: hidden;
+	background: url(/src/Funny-demo/3DGoogle/img/boxf2.png);
+}
+
+#bottom-panel textarea {
+	width: 90px;
+	height: 90px;
+	margin: 3px;
+	padding: 0;
+	font-size: 10px;
+	border: none;
+	background-color: transparent;
+}
+
+#bottom-inner {
+	text-align: center;
+}
+
+#bottom-inner iframe {
+	width: 200px;
+	height: 170px;
+	border: none;
+	background-color: #fff;
+}
+
+.box-label h2 {
+	margin:  30px 10px 10px 10px;
+	padding: 0;
+	font-size: 11px;
+}
+
+button {
+	margin: 1px;
+	cursor: pointer;
+}

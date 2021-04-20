@@ -11,7 +11,7 @@ npm install
 ```bash
 npm run test
 ```
-Then visit [http://127.0.0.1:3006/menu.html] in your browser for local
+Then visit [http://127.0.0.1:3006/menu.html] in your browser 
 
 Online demo [here](http://gnipbao.github.io/css3-test/menu.html)
 

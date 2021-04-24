@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <title>black nets</title>
+    <link rel="stylesheet" href="index.css"/>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            word-break: break-all
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #000;
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0)
+        }
+
+    </style>
+</head>
+<body>
+
+<article id="container">
+
+    <div class="banner-canvas" style="position: absolute; z-index: 1;top: 0;left:0;">
+        <canvas></canvas>
+    </div>
+    <script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/ban.js"></script>
+</article>
+</body>
+</html>

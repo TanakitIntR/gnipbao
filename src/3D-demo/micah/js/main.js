@@ -37,7 +37,7 @@
 
 	// cube material
 
-	var cubeTexture = THREE.ImageUtils.loadTexture( 'images/circuit_pattern.png' );
+	var cubeTexture = THREE.ImageUtils.loadTexture( 'imgs/circuit_pattern.png' );
 	cubeTexture.wrapS = cubeTexture.wrapT = THREE.RepeatWrapping;
 	cubeTexture.anisotropy = 16;
 

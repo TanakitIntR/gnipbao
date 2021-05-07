@@ -46,7 +46,7 @@
 	left: 0;
 	top: 0;
 
-	background: url(/src/Funny-demo/3DGoogle/img/handle.gif) no-repeat top left;
+	background: url(/src/3D-demo/3DGoogle/img/handle.gif) no-repeat top left;
 	-moz-user-select: none;
 	-webkit-user-select: none;
 }
@@ -65,7 +65,7 @@
 	width: 200px;
 	height: 200px;
 	overflow: hidden;
-	background: url(/src/Funny-demo/3DGoogle/img/boxf2.png);
+	background: url(/src/3D-demo/3DGoogle/img/boxf2.png);
 }
 
 #bottom-panel textarea {

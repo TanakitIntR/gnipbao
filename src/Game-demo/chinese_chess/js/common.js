@@ -127,24 +127,24 @@ com.loadImages = function(stype){
 	
 	//绘制棋盘
 	com.bgImg = new Image();
-	com.bgImg.src  = "images/"+stype+"/bg.png";
+	com.bgImg.src  = "imgs/"+stype+"/bg.png";
 	
 	//提示点
 	com.dotImg = new Image();
-	com.dotImg.src  = "images/"+stype+"/dot.png";
+	com.dotImg.src  = "imgs/"+stype+"/dot.png";
 	
 	//棋子
 	for (var i in com.args){
 		com[i] = {};
 		com[i].img = new Image();
-		com[i].img.src = "images/"+stype+"/"+ com.args[i].img +".png";
+		com[i].img.src = "imgs/"+stype+"/"+ com.args[i].img +".png";
 	}
 	
 	//棋子外框
 	com.paneImg = new Image();
-	com.paneImg.src  = "images/"+stype+"/r_box.png";
+	com.paneImg.src  = "imgs/"+stype+"/r_box.png";
 	
-	document.getElementsByTagName("body")[0].style.background= "url(images/"+stype+"/bg.jpg)";
+	document.getElementsByTagName("body")[0].style.background= "url(imgs/"+stype+"/bg.jpg)";
 	
 }
 

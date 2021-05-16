@@ -1,0 +1,398 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>visualEYEzer</title>
+	<meta charset="utf-8">
+	<link href="styles.css" type="text/css" rel="stylesheet"/>
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+	<script>
+		/*$( init );
+
+		function init() {
+
+
+		}*/
+
+
+	</script>
+
+</head>
+<body>
+<div id="headerContainer">
+    A procedural eye by <a href="http://www.inear.se">@inear</a>.<br>Build with <a href="https://github.com/mrdoob/three.js/" target="_blank">three.js</a> and <a href="https://github.com/zz85/audiokeys.js" target="_blank">audiokeys.js</a>.<br>Music (Chrome): <a href="http://itunes.apple.com/se/album/soulhack/id7018192" target="_blank">City Ports</a> by Forss<br>Cubemap from <a href="http://www.codemonsters.de/home/content.php?show=cubemaps" target="_blank">here</a>
+</div>
+
+<div id="container"></div>
+</body>
+
+<script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+    try{
+        var pageTracker = _gat._getTracker("UA-181266-1");
+        pageTracker._trackPageview();
+    } catch(err) {}</script>
+
+<script data-src="js/eye_vertex.js" data-name="Eye" type="x-shader/x-vertex"></script>
+<script data-src="js/eye_fragment.js" data-name="Eye" type="x-shader/x-fragment"></script>
+
+<script type="text/javascript" src="js/Stats.js"></script>
+<script type="text/javascript" src="js/Three.js"></script>
+<script type="text/javascript" src="js/dat.gui.min.js"></script>
+<script type="text/javascript" src="js/AudioKeys.js"></script>
+<script type="text/javascript" src="js/Detector.js"></script>
+<script type="text/javascript" src="js/Tween.js"></script>
+<script type="text/javascript" src="js/signals.min.js"></script>
+<script type="text/javascript" src="js/Library.js"></script>
+
+
+
+<script type="text/javascript">
+
+if (! Detector.webgl) {
+	Detector.addGetWebGLMessage();
+	document.getElementById('container').innerHTML = "";
+}
+
+
+//scene
+var TO_RADIANS = Math.PI / 180;
+var container, stats;
+var camera, scene, renderer;
+
+var eye,finalEyeUniform
+var ambientLight, spotLight, pointLight;
+var intersectionPoint,intersectNormal;
+var bAudioPlaying;
+var SCREEN_WIDTH = 1000;
+var SCREEN_HEIGHT = 1000;
+var properties;
+var audio;
+var mouse2d = new THREE.Vector3();
+
+//start engine and loading
+$(document).ready(function(){
+	mainInit();
+});
+
+function mainInit() {
+
+	LIBRARY.Shaders.loadedSignal.add( onShadersLoaded );
+
+    initShaderLoading();
+}
+
+function onShadersLoaded() {
+
+    properties = {
+
+        level1:0,
+        level2:0,
+        level3:0,
+
+        startFreqBin1:0,
+        endFreqBin1:430,
+        lowLimit1:25,
+        highLimit1:202,
+
+        startFreqBin2:1,
+        endFreqBin2:40,
+        lowLimit2:40,
+        highLimit2:255,
+
+        irisNoise:0.005,
+        irisMuscels:100,
+        color2: 0x009BFA,
+        color1: 0xe2442b
+
+    }
+
+	initEngine();
+	initObjects();
+    initAudio();
+    initGUI();
+
+    initStartState()
+
+	window.addEventListener( 'resize', onWindowResize, false );
+	window.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	onWindowResize();
+
+}
+
+function initAudio(){
+    audio = new AudioKeys('audio/cityports2.ogg');
+
+    if( audio.context != undefined ) {
+
+        audio.addWatchers(properties.startFreqBin1, properties.endFreqBin1, properties.lowLimit1, properties.highLimit1);
+        audio.addWatchers(properties.startFreqBin2, properties.endFreqBin2, properties.lowLimit2, properties.highLimit2);
+        audio.addWatchers(256, 512, 0, 100);
+
+        audio.load(function() {
+        // When audio file is ready to play
+            bAudioPlaying = true;
+
+            audio.play();
+        });
+    }
+
+
+}
+
+function initGUI() {
+
+
+    /*stats = new Stats();
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.top = '0px';
+    stats.domElement.style.zIndex = 100;
+
+    stats.domElement.children[ 0 ].children[ 0 ].style.color = "#eee";
+    stats.domElement.children[ 0 ].style.background = "transparent";
+    stats.domElement.children[ 0 ].children[ 1 ].style.display = "none";
+
+    container.appendChild( stats.domElement );
+*/
+    var gui = new dat.GUI();
+
+    if( audio.context != undefined) {
+
+        var f1 = gui.addFolder('Sound analysis');
+
+        f1.add(properties, 'startFreqBin1').min(0).max(2048).onChange(function(newValue){
+            audio.watchers[0][0] = parseInt(newValue);
+        });
+
+        f1.add(properties, 'endFreqBin1').min(0).max(2048).onChange(function(newValue){
+            audio.watchers[0][1] = parseInt(newValue);
+        });
+
+        f1.add(properties, 'lowLimit1').min(0).max(256).onChange(function(newValue){
+            audio.watchers[0][2] = parseInt(newValue);
+        });
+
+        f1.add(properties, 'highLimit1').min(0).max(256).onChange(function(newValue){
+            audio.watchers[0][3] = parseInt(newValue);
+        });
+
+        f1.add(properties, 'startFreqBin2').min(0).max(2048).onChange(function(newValue){
+            audio.watchers[1][0] = parseInt(newValue);
+        });
+
+        f1.add(properties, 'endFreqBin2').min(0).max(2048).onChange(function(newValue){
+            audio.watchers[1][1] = parseInt(newValue);
+        });
+
+        f1.add(properties, 'lowLimit2').min(-256).max(256).onChange(function(newValue){
+            audio.watchers[1][2] = parseInt(newValue);
+        });
+
+        f1.add(properties, 'highLimit2').min(-256).max(256).onChange(function(newValue){
+            audio.watchers[1][3] = parseInt(newValue);
+        });
+
+        f1.add(properties, 'level1').min(0).max(1).listen();
+        f1.add(properties, 'level2').min(0).max(1).listen();
+        f1.add(properties, 'level3').min(0).max(1).listen();
+    }
+
+    var f2 = gui.addFolder('Eye');
+
+    f2.add(properties, 'irisNoise').min(0).max(0.09).onChange(function(newValue){
+        finalEyeUniform.uIrisNoise.value = newValue;
+
+    });
+
+    f2.add(properties, 'irisMuscels').min(50).max(400).onChange(function(newValue){
+        finalEyeUniform.uIrisMuscels.value = newValue;
+
+    });
+
+   // f2.addColor(properties, 'color1').listen();
+
+    f2.addColor(properties, 'color2').onChange(function(newValue){
+        finalEyeUniform.DiffuseColour2.value = new THREE.Color(newValue);
+
+    });
+
+   gui.close();
+
+}
+
+function initEngine() {
+
+    container = document.getElementById('container');
+
+	scene = new THREE.Scene();
+
+	camera = new THREE.PerspectiveCamera( 70, SCREEN_WIDTH / SCREEN_HEIGHT,1,4000 );
+    camera.setLens(70,43.25);
+    camera.position.z = 2000;
+    camera.position.y = 0;
+    camera.position.x = 0;
+    camera.lookAt( scene.position );
+    scene.add(camera);
+
+    var dirLight = new THREE.DirectionalLight();
+    dirLight.intensity = 1.3
+    dirLight.position.x = camera.position.x+200;
+    dirLight.position.y = camera.position.y+200;
+    dirLight.position.z = 500
+
+    dirLight.lookAt(scene.position)
+    scene.add( dirLight)
+
+
+	renderer = new THREE.WebGLRenderer({ antialias: true, precision:'highp'});
+	renderer.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
+
+	renderer.autoClear = true;
+	renderer.sortObjects = false;
+
+	container.innerHTML = "";
+	container.appendChild(renderer.domElement);
+
+    //scene.rotation.y = 45*TO_RADIANS;
+}
+
+
+function initObjects() {
+
+   var  skyCubeTexture = THREE.ImageUtils.loadTextureCube( ['images/sky_xp.jpg','images/sky_xn.jpg', 'images/sky_yp.jpg', 'images/sky_yn.jpg','images/sky_zp.jpg','images/sky_zn.jpg'] );
+
+    var eyeUniforms = {
+        audio: { type: "f", value: 0 },
+        audio2: { type: "f", value: 0 },
+        audio3: { type: "f", value: 0 },
+        DiffuseColour1: { type: "c", value: new THREE.Color(properties.color1)  },
+        DiffuseColour2: { type: "c", value: new THREE.Color(properties.color2) },
+        uIrisNoise: { type: "f", value: properties.irisNoise },
+        uIrisMuscels: { type: "f", value: properties.irisMuscels }
+
+    };
+
+    finalEyeUniform = THREE.UniformsUtils.merge( [THREE.ShaderLib["phong"].uniforms, eyeUniforms] );
+    finalEyeUniform = THREE.UniformsUtils.merge( [THREE.UniformsLib["common"], finalEyeUniform] );
+
+    finalEyeUniform.shininess.value = 100;
+    /*finalEyeUniform.envMap.texture = skyCubeTexture;
+    finalEyeUniform.reflectivity.value = 0.2;
+    finalEyeUniform.refractionRatio.value = 0.98;
+    finalEyeUniform.combine.value = 1;
+*/
+
+    var params = {
+        uniforms:  finalEyeUniform,
+        vertexShader:   LIBRARY.Shaders.Eye.vertex,
+        fragmentShader: LIBRARY.Shaders.Eye.fragment,
+        lights: true
+    }
+
+    var material = new THREE.ShaderMaterial(params);
+    var eyeGeo = new THREE.SphereGeometry(500,50,50);
+
+    eye = new THREE.Mesh(eyeGeo,material);
+
+    for( var i=0; i<eyeGeo.vertices.length; i++) {
+       if(eyeGeo.vertices[i].position.y > 455 ) eyeGeo.vertices[i].position.y = 455 + (500-eyeGeo.vertices[i].position.y) - 50;
+    }
+
+    eye.rotation.x = 90*TO_RADIANS;
+
+    scene.add(eye);
+
+    var reflectGeo = new THREE.SphereGeometry(505,50,50);
+    var reflectMaterial = new THREE.MeshPhongMaterial({color:0xffffff,envMap:skyCubeTexture,reflectivity:1,combine:1,blending:THREE.AdditiveBlending,transparent:true,opacity:0.1})
+    var reflectSphere = new THREE.Mesh(reflectGeo,reflectMaterial);
+    scene.add(reflectSphere);
+
+}
+var extraRotY=0 ,extraRotZ=0;
+
+function setNewRotationTarget() {
+    var scope = this
+    var tween = new TWEEN.Tween(scope)
+            .to({ extraRotY: (Math.random()*7-3.5), extraRotZ: (Math.random()*7-3.5) }, 500 + Math.random()*500)
+
+            .easing(TWEEN.Easing.Sinusoidal.EaseInOut)
+            .onComplete( function () {
+                setNewRotationTarget()
+            })
+
+    tween.start();
+}
+
+function initStartState() {
+
+    setNewRotationTarget()
+
+    render();
+	animate();
+}
+
+//game loop
+function animate() {
+	requestAnimationFrame(animate);
+	render()
+}
+
+var time = 0;
+
+function render() {
+
+    if( bAudioPlaying && audio.context != undefined) {
+
+        audio.process();
+
+        properties.level1 = finalEyeUniform.audio.value = audio.getLevels(0);
+        properties.level2 = finalEyeUniform.audio2.value = audio.getLevels(1);
+        properties.level3 = finalEyeUniform.audio3.value = audio.getLevels(2);
+
+        properties.color1 = new THREE.Color().setRGB(properties.level1,properties.level2,properties.level3).getHex();
+        finalEyeUniform.DiffuseColour1.value = new THREE.Color().setRGB(properties.level1,properties.level2,properties.level3);
+
+    }
+
+
+
+    eye.rotation.z = (mouse2d.x*-50+extraRotY)*TO_RADIANS;
+    eye.rotation.x = (mouse2d.y*-50+90+extraRotZ)*TO_RADIANS;
+    camera.position.y = mouse2d.y*-100;
+    camera.lookAt(scene.position)
+	renderer.render( scene, camera );
+
+    TWEEN.update();
+
+   // stats.update();
+	//updateFPS()
+}
+
+
+function onDocumentMouseMove( event ) {
+	event.preventDefault();
+	mouse2d.x = ((event.clientX - $("#container").offset().left) / SCREEN_WIDTH ) * 2 - 1;
+	mouse2d.y = - (( (event.clientY)-$("#container").offset().top) / SCREEN_HEIGHT ) * 2 + 1;
+}
+
+function onWindowResize() {
+
+    SCREEN_WIDTH = window.innerWidth;
+    SCREEN_HEIGHT = window.innerHeight;
+
+    renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+
+	camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+    camera.updateProjectionMatrix()
+
+
+    $("#container").css({left:0,top:0})
+}
+
+
+
+</script>
+
+</html>

@@ -1,32 +1,32 @@
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>WebGL - Jellyfish</title>
-<link href="style.css" rel="stylesheet" type="text/css">
-<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="js/mjs.js"></script>
+  <title>WebGL - Jellyfish</title>
+  <link href="style.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="js/lib/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="js/lib/mjs.js"></script>
 
-<script type="text/javascript" src="js/initWin.js"></script>
-<script type="text/javascript" src="js/initUniforms.js"></script>
-<script type="text/javascript" src="js/initTextures.js"></script>
-<script type="text/javascript" src="js/initShaders.js"></script>
-<script type="text/javascript" src="js/initBuffers.js"></script>
+  <script type="text/javascript" src="js/initWin.js"></script>
+  <script type="text/javascript" src="js/initUniforms.js"></script>
+  <script type="text/javascript" src="js/initTextures.js"></script>
+  <script type="text/javascript" src="js/initShaders.js"></script>
+  <script type="text/javascript" src="js/initBuffers.js"></script>
 
-<script type="text/javascript" src="js/interact.js"></script>
-<script type="text/javascript" src="js/debug.js"></script>
+  <script type="text/javascript" src="js/interact.js"></script>
+  <script type="text/javascript" src="js/debug.js"></script>
 
-<script type="text/javascript" src="js/tick.js"></script>
-<script type="text/javascript" src="js/simulator.js"></script>
-<script type="text/javascript" src="js/drawJellyfish.js"></script>
-<script type="text/javascript" src="js/drawScene.js"></script>
+  <script type="text/javascript" src="js/tick.js"></script>
+  <script type="text/javascript" src="js/simulator.js"></script>
+  <script type="text/javascript" src="js/drawJellyfish.js"></script>
+  <script type="text/javascript" src="js/drawScene.js"></script>
 
-<style>
-body {
-  font-family:  'Monda', sans-serif;
-  margin: 0;
-  overflow: hidden;
-}
-</style>
+  <style>
+    body {
+      font-family:  'Monda', sans-serif;
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
 
-<script id="jellyfish-vs" type="x-shader/x-vertex">
+  <script id="jellyfish-vs" type="x-shader/x-vertex">
 precision highp float;
 
 attribute vec3 aVertexPosition;
@@ -104,7 +104,7 @@ void main(void) {
 }
 </script>
 
-<script id="jellyfish-fs" type="x-shader/x-fragment">
+  <script id="jellyfish-fs" type="x-shader/x-fragment">
 precision mediump float;
 
 uniform sampler2D uSampler0;
@@ -127,46 +127,46 @@ void main(void) {
 }
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-  webGLStart();
-});
-</script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      webGLStart();
+    });
+  </script>
 
 </head>
 <body>
-    <div id="statusBar">
-<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://akirodic.com/p/jellyfish/" data-text="Interact with beautiful jellyfish in your browser!" data-via="akirodic" data-hashtags="WebGL">Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-<a href="https://twitter.com/akirodic" class="twitter-follow-button" data-show-count="false">Follow @akirodic</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-    </div>
-    <div id="console">
-       <div class="console-field" id="debugJellyfish">
-          <b>jellyfish debug</b>
-            Frame rate: <span id="frameRate">NaN</span><br />
+<div id="statusBar">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://akirodic.com/p/jellyfish/" data-text="Interact with beautiful jellyfish in your browser!" data-via="akirodic" data-hashtags="WebGL">Tweet</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  <a href="https://twitter.com/akirodic" class="twitter-follow-button" data-show-count="false">Follow @akirodic</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<div id="console">
+  <div class="console-field" id="debugJellyfish">
+    <b>jellyfish debug</b>
+    Frame rate: <span id="frameRate">NaN</span><br />
 
-            <span class="input-section">count</span>
-            <input type="text" class="textboxDebug" id="jCount" /><br />
-            <span class="input-section">size</span>
-            <input type="text" class="textboxDebug" id="jScale" />
-            <input type="text" class="textboxDebug" id="jScaleRandom"  /><br />
-            <span class="input-section">Turbulence</span>
-            <input type="text" class="textboxDebug" id="jTurb" /><br />
-            <span class="input-section">speed</span>
-            <input type="text" class="textboxDebug" id="jSpeed" /><br />
-        </div>
-    </div>
-    <canvas id="webgl-canvas"></canvas>
+    <span class="input-section">count</span>
+    <input type="text" class="textboxDebug" id="jCount" /><br />
+    <span class="input-section">size</span>
+    <input type="text" class="textboxDebug" id="jScale" />
+    <input type="text" class="textboxDebug" id="jScaleRandom"  /><br />
+    <span class="input-section">Turbulence</span>
+    <input type="text" class="textboxDebug" id="jTurb" /><br />
+    <span class="input-section">speed</span>
+    <input type="text" class="textboxDebug" id="jSpeed" /><br />
+  </div>
+</div>
+<canvas id="webgl-canvas"></canvas>
 
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      ga('create', 'UA-68216254-1', 'auto');
-      ga('send', 'pageview');
-    </script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-68216254-1', 'auto');
+  ga('send', 'pageview');
+</script>
 
 </body>
 </html>

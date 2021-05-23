@@ -32,19 +32,12 @@ a {
   position:absolute;
   z-index:0;
 }
-#statusBar, #statusBar span{
-  width:100%;
-  font-size:16px;
-  position:absolute;
-  z-index:3;
-  background:#333;
-  padding:5px 10px;
-  border-bottom:1px solid #fff;
-}
+
 #console{
-  position:absolute;
-  top:35px;
+  position: relative;
+  top: 8px;
   min-width:265px;
+  float: right;
   overflow-y:auto;
   overflow-x:hidden;
   height:100%;
@@ -80,6 +73,8 @@ a {
 }
 
 .console-field input{
+  width: 40px;
+  height: 16px;
   margin:1px 0 0 0;
   background:#000;
 }
@@ -91,7 +86,7 @@ a {
 }
 .console-field span.input-section{
   display:inline-block;
-  width:70px;
+  width: 97px;
 }
 .textboxDebug{
   padding:0;

@@ -8,7 +8,7 @@ var bufferOK = {};
 
 function initBuffers(){
   loadObject('jellyfish0','meshes/jellyfish0.json');
-  loadObject('jellyfish1','meshes/jellyfish1 .json');
+  loadObject('jellyfish1','meshes/jellyfish0.json');
   loadObject('jellyfish2','meshes/jellyfish2.json');
   loadObject('jellyfish3','meshes/jellyfish3.json');
 }

@@ -1,0 +1,571 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<title>Beanstalk</title>
+		<link rel="shortcut icon" href="favicon.ico">
+		<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+		<meta charset="utf-8">
+		<style type="text/css">
+		
+			body {
+				color: #aaccff;
+				font-family:Monospace;
+				font-size:13px;
+				text-align:center;
+				background-color: #333333;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+		</style>
+	</head>
+	<body>
+		<audio id="audio" preload="auto" loop> 
+			<!--<source src="part1.ogg" type="audio/ogg; codecs=vorbis"> -->
+			<source src="audio/thereisareason.ogg" type="audio/ogg; codecs=vorbis">
+			<source src="audio/thereisareason.mp3" type="audio/mpeg" > 
+		</audio> 
+		
+		<div id="container"></div>
+
+		<script type="text/javascript" src="js/ObjectPool.js"></script>
+		<script type="text/javascript" src="js/Tween.js"></script>
+		<script type="text/javascript" src="js/Three.js"></script>
+		<script type="text/javascript" src="js/BloomEffect.js"></script>
+		<script type="text/javascript" src="js/ThreeWebGL.js"></script>
+      <script type="text/javascript" src="js/Plant.js"></script>
+		<script type="text/javascript" src="js/Detector.js"></script>
+		<script type="text/javascript" src="js/thereisareason.js"></script>
+		<script type="text/javascript" src="js/RequestAnimationFrame.js"></script>
+		
+		<script type="text/javascript" src="js/Stats.js"></script>
+		<script type="text/javascript">
+
+			if ( ! Detector.webgl ) {
+
+				Detector.addGetWebGLMessage();
+				document.getElementById( 'container' ).innerHTML = "";
+			}
+			
+			var TO_RADIANS = Math.PI / 180;
+			
+			var branchPool = new ObjectPool();
+			branchPool.createObject = createBranch
+			
+			//mouse interaction
+			var toMouseX=0,toMouseY=0,mouseX=0,mouseY=0;
+			var bMouseDown = false;
+			var distance = 400;
+			
+			//scene
+			var container, stats;
+			var camera, cameraTarget, scene, renderer, renderTarget;
+			var plant;
+			var dirLight;
+			
+			//textures/materials
+			var branchMaterial;
+			var leafMaterial;
+			var skyMaterials, sky2Materials;
+			
+			//audio
+			var audio,audio2,amplitude,soundGate = 0;
+			
+			//objects
+			var skyMesh,skyMesh2,activeSkyMesh;
+			var leafGeometry,leafStalkGeometry;
+			var leafPartsLoaded = 0;
+			var branches = new Array();
+			
+			//animation
+			var delta = 0;
+			var style = 0;
+			var leafSpawnInterval;
+			var spawnCounter = 0;
+			
+			//animation trigger style
+			var toTriggerPointX = 0, toTriggerPointY = 0, triggerPointX = 0, triggerPointY = 0;
+			var bLockTriggerPoint =  false;
+			
+			//start doing stuff
+			initMaterials();
+			initEngine();
+			initObjects();
+			initStartAnim();
+			animate();
+			
+
+			function initEngine() {
+
+				container = document.getElementById( 'container' );
+
+				camera =  new THREE.Camera( 60, 1, 1, 6500);
+				camera.position.z = -85;
+				camera.position.y = 40;
+				camera.aspect = window.innerWidth / window.innerHeight;
+				
+				//fix camera direction
+				cameraTarget = new THREE.Object3D();
+				cameraTarget.position.y = 10;
+				cameraTarget.position.z = 6000;
+				camera.target = cameraTarget;
+				
+				camera.updateProjectionMatrix();
+				
+				scene = new THREE.Scene();
+				scene.fog = new THREE.Fog( 0x999999, 0.1, 8000 );
+
+				//lights
+				scene.addLight(  new THREE.AmbientLight( 0x222222 ) );
+				
+				dirLight = new THREE.DirectionalLight( 0xffffff );
+				dirLight.intensity = 0.2;
+				dirLight.position.x = 1;
+				dirLight.position.y = 1;
+				dirLight.position.z = -2;
+				dirLight.position.normalize();
+				scene.addLight( dirLight );
+
+				renderer = new THREE.WebGLRenderer( { antialias: true} );
+				renderer.autoClear = false;
+				renderer.sortObjects = false;
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				renderTarget = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight );
+			  	renderTarget.minFilter = THREE.LinearFilter;
+			  	renderTarget.magFilter = THREE.NearestFilter;
+
+				postBloom = new BloomEffect( renderer,renderTarget,window.innerWidth, window.innerHeight,4);
+        		//postBloom.init();
+				
+				container.innerHTML = "";
+				container.appendChild( renderer.domElement );
+								
+				stats = new Stats();
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.top = '0px';
+				container.appendChild( stats.domElement );
+		
+				//init events
+				document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+				document.addEventListener( 'mouseup', onDocumentMouseUp, false );
+				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+				window.addEventListener( 'resize', onWindowResize, false );
+					
+				/*var accumulated = 0;
+				for ( var i = 0; i < part1Data.length; i ++ ) {
+					part1Data[ i ] = accumulated += part1Data[ i ];
+				}*/
+				
+				audio =  document.getElementById( 'audio' );
+				audio.play();
+				
+			}
+
+			function initMaterials() {
+				var branchTexture = ImageUtils.loadTexture( "images/efeu_branch.png" );
+				
+				branchTexture.mapping = THREE.UVMapping;
+				branchTexture.minFilter = branchTexture.magFilter = THREE.LinearFilter;
+				branchTexture.wrapS = branchTexture.wrapT = THREE.RepeatWrapping;
+				
+				branchMaterial = new THREE.MeshPhongMaterial( { map: branchTexture, depthTest:true,color:0x229a41,shininess: 10,specular:10, ambient:0x229a41} );//new THREE.MeshBasicMaterial( { color:0x0044ff, opacity:1, map: texture } );
+				branchMaterial.shading = THREE.SmoothShading;
+				
+				var leafTexture = ImageUtils.loadTexture( 'images/efeu1.jpg' );
+				leafTexture.mapping = THREE.UVMapping;
+				leafTexture.minFilter = leafTexture.magFilter = THREE.LinearFilter;
+			
+				leafMaterial = new THREE.MeshPhongMaterial( { map:leafTexture,depthTest:true,color:0x52a963, shininess: 100, ambient:0x68de65} );//new THREE.MeshBasicMaterial( { color:0x0044ff, opacity:1, map: texture } );
+				leafMaterial.shading = THREE.SmoothShading;	
+				
+				var path = "images/overcast1_";
+				var format = '.jpg';
+				var urls = [path + 'left' + format, path + 'right' + format, path + 'up' + format, path + 'down' + format, path + 'front' + format, path + 'back' + format];
+
+				var overcastTextures = [];
+				overcastTextures.push(ImageUtils.loadTexture( urls[ 0 ] ))
+				overcastTextures.push(ImageUtils.loadTexture( urls[ 1 ] ))
+				overcastTextures.push(ImageUtils.loadTexture( urls[ 2 ] ))
+				overcastTextures.push(ImageUtils.loadTexture( urls[ 2 ] ))
+				overcastTextures.push(ImageUtils.loadTexture( urls[ 4 ] ))
+				overcastTextures.push(ImageUtils.loadTexture( urls[ 5 ] ))
+				
+				skyMaterials = [];
+				skyMaterials.push( new THREE.MeshBasicMaterial( { map: overcastTextures[ 0 ]  } ) );
+				skyMaterials.push( new THREE.MeshBasicMaterial( { map: overcastTextures[ 1 ] } ) );
+				skyMaterials.push( new THREE.MeshBasicMaterial( { map: overcastTextures[ 2 ] } ) );
+				skyMaterials.push( new THREE.MeshBasicMaterial( { map: overcastTextures[ 3 ] } ) );
+				skyMaterials.push( new THREE.MeshBasicMaterial( { map: overcastTextures[ 4 ] } ) );
+				skyMaterials.push( new THREE.MeshBasicMaterial( { map: overcastTextures[ 5 ] } ) );
+				
+				//sunny sky textures
+				var sunnyTextures = [];
+				sunnyTextures.push(ImageUtils.loadTexture( 'images/sunny3_left.jpg' ))
+				sunnyTextures.push(ImageUtils.loadTexture( 'images/sunny3_right.jpg' ))
+				sunnyTextures.push(ImageUtils.loadTexture( 'images/sunny3_up.jpg' ))
+				sunnyTextures.push(ImageUtils.loadTexture( 'images/sunny3_up.jpg' ))
+				sunnyTextures.push(ImageUtils.loadTexture( 'images/sunny3_front.jpg' ))
+				sunnyTextures.push(ImageUtils.loadTexture( 'images/sunny3_back.jpg' ))
+				
+				sky2Materials = [];
+				sky2Materials.push( new THREE.MeshBasicMaterial( { map: sunnyTextures[ 0 ] } ) );
+				sky2Materials.push( new THREE.MeshBasicMaterial( { map: sunnyTextures[ 1 ] } ) );
+				sky2Materials.push( new THREE.MeshBasicMaterial( { map: sunnyTextures[ 2 ] } ) );
+				sky2Materials.push( new THREE.MeshBasicMaterial( { map: sunnyTextures[ 3 ] } ) );
+				sky2Materials.push( new THREE.MeshBasicMaterial( { map: sunnyTextures[ 4 ] } ) );
+				sky2Materials.push( new THREE.MeshBasicMaterial( { map: sunnyTextures[ 5 ] } ) );
+			}
+
+			function initObjects() {
+				//sky
+				skyMesh = new THREE.Mesh( new Cube( 7000, 7000, 7000, 1, 1, 1,  skyMaterials, true, { px: true, nx: true, py: true, ny: false, pz: true, nz: true } ), new THREE.MeshFaceMaterial() );
+				skyMesh2 = new THREE.Mesh( new Cube( 7000, 7000, 7000, 1, 1, 1,  sky2Materials, true, { px: true, nx: true, py: true, ny: false, pz: true, nz: true } ), new THREE.MeshFaceMaterial() );
+				scene.addObject( skyMesh );
+				
+				activeSkyMesh = skyMesh; 
+	
+				//PLANT STALK
+				plant = new Plant( branchMaterial, 30);
+				plant.rotation.x = -10 * TO_RADIANS;
+				plant.build()
+				plant.dynamic = true;
+				plant.geometry.computeFaceNormals();
+				plant.geometry.computeVertexNormals();
+				scene.addObject( plant );	
+				
+				//load leaf parts
+				var loader = new THREE.JSONLoader();
+				loader.load( { model: "js/leaf3.js", callback: function(geo) { leafStalkModelLoaded( geo ) } } );
+				loader.load( { model: "js/leaf5.js", callback: function(geo) { leafModelLoaded( geo ) } } );
+			}
+
+			function initStartAnim() {
+		
+				//start sequencer
+				switchStyleInterval = setInterval( function(){
+					style++
+					if( style > 4) style = 0;
+				},15000)
+		
+				plant.position.z = -2000;
+				plant.position.y = -1000;
+				plant.tween = new TWEEN.Tween(plant.position,false)
+					.to({ z: 0,y:-100 }, 5000)
+					.easing(TWEEN.Easing.Sinusoidal.EaseOut)
+					.start();
+				
+				//skybox
+				scene.tween = new TWEEN.Tween(scene.fog,false)
+					
+					.to({ far: 1500 }, 6000)
+					.easing(TWEEN.Easing.Sinusoidal.EaseOut)
+					.delay(6000)
+					.onComplete(function(){
+							skyMesh.position.z = 0;
+							activeSkyMesh = skyMesh2;
+							scene.addObject( skyMesh2);
+							scene.removeObject( skyMesh);
+							 						
+							dirLight.tween = new TWEEN.Tween(dirLight,false)
+							.to({ intensity: .7 }, 6000)
+							.start();
+							
+							
+							
+					})
+					.start();
+
+				scene.tweenBack = new TWEEN.Tween(scene.fog,false)
+					.delay(2000)
+					.to({ far: 15000 }, 10000)
+					.easing(TWEEN.Easing.Sinusoidal.EaseOut)
+					
+
+				scene.tween.chain(scene.tweenBack);
+				
+				//move towards skybox
+				skyMesh.tween = new TWEEN.Tween(skyMesh.position,false)
+					.to({ z:-1500 }, 12000)
+					.start();
+				
+				//camera movement
+				camera.tween = new TWEEN.Tween(camera.position,false)
+					.to({ x: 500 }, 6000)
+					.easing(TWEEN.Easing.Sinusoidal.EaseInOut)
+					.start();
+
+				camera.tweenBack = new TWEEN.Tween(camera.position,false)
+					.easing(TWEEN.Easing.Sinusoidal.EaseInOut)
+					.to({ x: -500 }, 6000)
+					
+				camera.tween.chain(camera.tweenBack);
+				camera.tweenBack.chain(camera.tween);
+				
+				cameraTarget.tween = new TWEEN.Tween(cameraTarget.position,false)
+					.to({ x: -3500 }, 6000)
+					.easing(TWEEN.Easing.Sinusoidal.EaseInOut)
+					.start();
+
+				cameraTarget.tweenBack = new TWEEN.Tween(cameraTarget.position,false)
+					.to({ x: 3500 }, 6000)
+					.easing(TWEEN.Easing.Sinusoidal.EaseInOut)
+					
+				cameraTarget.tween.chain(cameraTarget.tweenBack);
+				cameraTarget.tweenBack.chain(cameraTarget.tween);
+				
+			}
+
+			function leafStalkModelLoaded( geometry ) {
+				leafStalkGeometry = geometry;
+				leafPartsLoaded++
+			}
+			
+			function leafModelLoaded( geometry ) {
+				leafGeometry = geometry;
+				leafGeometry.computeFaceNormals();
+				leafGeometry.computeVertexNormals();
+				leafPartsLoaded++
+			
+			}
+			
+			
+			function createBranch() {
+				
+				var branch = new THREE.Mesh( leafStalkGeometry, branchMaterial );
+				
+				var leafMesh = new THREE.Mesh( leafGeometry, leafMaterial );
+				branch.addChild(leafMesh);
+				
+				var spawnPoint = new THREE.Vector3();
+				
+				leafMesh.position = new THREE.Vector3(53,55,0);
+				leafMesh.rotation = new THREE.Vector3(0.1,Math.random()*0.4,Math.random()*0.4-.3);
+				leafMesh.scale.x = leafMesh.scale.y = leafMesh.scale.z = 0.1*Math.random()+3.5;
+				
+				branch.geometry.computeFaceNormals();
+				branch.geometry.computeVertexNormals();
+				branch.geometry.__dirtyNormals = true;
+								
+				leafMesh.updateMatrix();
+				
+				return branch;	
+			}
+
+
+			var swap
+			function spawnLeaf() {
+				
+				//models not loaded yet
+				if( leafPartsLoaded < 2 ) return;
+				
+				//time to get up from the bath
+				var swimmingBranch = branchPool.getObject();
+				
+				swimmingBranch.tween = new TWEEN.Tween(swimmingBranch.rotation,false)
+					.to({ z: -0.4 }, 2000)
+					.easing(TWEEN.Easing.Sinusoidal.EaseOut)
+					.start();
+				
+				swimmingBranch.position = plant.ring[plant.ring.length-1][5].position.clone();
+				swimmingBranch.scale.x = swimmingBranch.scale.y = swimmingBranch.scale.z = 0.01
+				
+				//rotation
+				swimmingBranch.rotation = new THREE.Vector3((Math.random()*-30)* TO_RADIANS,0,0);
+				if(swap) {
+					swap = false;
+					swimmingBranch.rotation.y = -180* TO_RADIANS
+				}
+				else {
+					swap = true;
+				}
+				
+				swimmingBranch.rotation.y += (Math.random()*40-20)* TO_RADIANS
+				
+				plant.addChild(swimmingBranch);
+				branches.push(swimmingBranch);
+			}
+			
+	
+			//game loop
+			function animate() {
+				requestAnimationFrame( animate );				
+				render()
+			}
+			
+		
+			function render(){
+			
+				spawnCounter++
+				if( spawnCounter == 4 ) spawnCounter = 0;
+				 
+				if( spawnCounter == 0) {
+					spawnLeaf()
+				}
+				
+				amplitude = Math.floor( audio.currentTime * 30 - 1 );
+				var soundGateTarget = part1Data[amplitude]/6
+			
+				if( soundGateTarget > 100 || soundGateTarget < 100 ) {
+					soundGate += (soundGateTarget-soundGate)/2;
+				}
+				
+				//soundGate = soundGateTarget
+				delta += 0.1;
+				if( style == 0 ) {
+					soundGate *= 0.95;
+				}
+				if( style == 4 ) {
+					delta += soundGate/700;
+					soundGate *= 0.75;
+				}
+				else if( style == 2) {
+					soundGate *= 0.95;
+				}	
+				else if( style == 3 ) {
+					soundGate *= 0.95;
+				}
+				else if( style == 1 ) {
+					
+					if( (soundGate > 40 || soundGate < -40) && !bLockTriggerPoint ) {
+						bLockTriggerPoint = true;
+						triggerPointX = Math.random()*200-100;
+						triggerPointY = Math.random()*200-100;	
+						setTimeout( function(){ bLockTriggerPoint = false },100); 
+					}
+					
+					
+					toTriggerPointX += ( triggerPointX - toTriggerPointX ) / 2;
+					toTriggerPointY += ( triggerPointY - toTriggerPointY ) / 2;
+				}
+				
+				//soundGate = 0;
+				//change head and body inverse
+				for( i = 0; i<plant.ringOrigin.length; i++){
+					for( j = 0; j < plant.ringOrigin[i].length; j++ ) {
+						
+						pos = plant.ringOrigin[i][j].position.clone();
+						
+						if( i == plant.ringOrigin.length-1) {
+							//plant.offsetPoints[i] = new THREE.Vector3( mouseX*-400, mouseY*400-200 );	
+							if( style == 0 ) 
+								plant.offsetPoints[i] = new THREE.Vector3(  mouseX*-distance + 70*Math.cos(delta*.5) + 20*Math.cos(delta*2), mouseY*distance + 70*Math.sin(delta*.5) + 20*Math.sin(delta*2));
+							else if( style == 1 ) 
+								plant.offsetPoints[i] = new THREE.Vector3( mouseX*-distance + toTriggerPointX + 70*Math.cos(delta),  mouseY*distance + toTriggerPointY + 70*Math.sin(delta));	
+							else if( style == 2)
+								plant.offsetPoints[i] = new THREE.Vector3( mouseX*-distance + 70*Math.cos(delta*.5), soundGate + mouseY*distance-distance*.5 + 70*Math.sin(delta*.5) );	
+							else if( style == 3 )	
+								plant.offsetPoints[i] = new THREE.Vector3( soundGate+mouseX*-distance + 70*Math.cos(delta), mouseY*distance-distance*.5 + 70*Math.sin(delta));	
+							else if( style == 4 )	
+								plant.offsetPoints[i] = new THREE.Vector3(  mouseX*-distance +  soundGate*Math.cos(delta) , mouseY*distance +  soundGate*Math.sin(delta) );
+													
+						}
+						else {
+							plant.offsetPoints[i] = plant.offsetPoints[i+1];	
+						}
+						
+						pos.addSelf( plant.offsetPoints[i] );
+					
+						plant.ring[i][j].position = pos;
+					}
+				}
+			
+				plant.geometry.__dirtyVertices = true;
+				plant.geometry.computeCentroids();
+				
+				for( i=0;i<branches.length;i++){
+					var leaf = branches[i];
+					leaf.position.z -= plant.linkDist;
+					leaf.position.y += 0.2;
+					leaf.scale.x = leaf.scale.y = leaf.scale.z += 0.01;
+				}
+				
+				//delete leafs out of sight
+				if( branches.length > 0 && branches[0].position.z < -300 ) {
+					plant.removeChild( branches[0] );
+					branchPool.returnObject(branches[0].poolId);
+					branches.shift();
+				}
+				
+				var yRotVel = - (TO_RADIANS*mouseX)*.5
+			
+				if( plant.rotation.y > 0.1 && yRotVel > 0 ) {
+					yRotVel = 0;
+				}
+				
+				if( plant.rotation.y < -0.5 && yRotVel < 0) {
+					yRotVel = 0;
+				}
+				
+				if( activeSkyMesh ) {
+					activeSkyMesh.rotation.x = 90*TO_RADIANS + 0.1*mouseY;
+					activeSkyMesh.rotation.y += 0.002;
+				}
+				
+				renderer.clear();
+				renderer.render(scene, camera);
+				//renderer.render(scene, camera, renderTarget,true);
+				//postBloom.update();
+			
+				stats.update();
+				
+				TWEEN.update();
+				
+				mouseX += (toMouseX-mouseX)/3;
+				mouseY += (toMouseY-mouseY)/3;
+				
+			}
+			
+			/***************
+			* Event handlers
+			****************/
+			
+			
+			function onDocumentMouseMove( event ) {
+				event.preventDefault();
+				toMouseX = ( event.clientX / window.innerWidth ) * 2 - 1;
+				toMouseY = - ( event.clientY / window.innerHeight ) * 2 + 1;
+			}
+			
+			function onDocumentMouseDown( event ) {
+				event.preventDefault();
+				
+				//show tree grow animation
+				bMouseDown = true;
+				style++;
+				
+				if(style == 5 ) {
+					plant.materials[0].wireframeLinewidth = 2;
+					plant.materials[0].wireframe = true;
+					skyMesh.visible = false;
+					leafMaterial.wireframe = true;
+				}
+				else {
+					plant.materials[0].wireframe = false;
+					skyMesh.visible = true;
+					leafMaterial.wireframe = false;
+				}
+				
+			}
+			
+			function onDocumentMouseUp( event ) {
+				event.preventDefault();
+				
+				//show tree grow animation
+				bMouseDown = false;
+			}
+			
+			function onWindowResize(){
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderTarget.width = window.innerWidth;
+	        	renderTarget.height = window.innerHeight;
+				delete renderTarget.__webglFramebuffer;
+			}
+			
+		</script>
+
+	</body>
+</html>

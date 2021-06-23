@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>黑洞</title>
+    <style>
+        canvas{
+            display: block;
+            width: 800px;
+            height: 800px;
+            animation: rotates 15s linear infinite;
+            position: fixed;
+            z-index: 302;
+            left: 300px;
+            top: 0;
+            padding: 0px;
+        }
+        @keyframes rotates {
+            from {transform: rotate(0deg);}
+            to{transform: rotate(360deg);}
+        }
+       @-webkit-keyframes rotates {
+           from {transform: rotate(0deg);}
+           to{transform: rotate(360deg);}
+       }
+    </style>
+</head>
+<body>
+<!--<img src="images/blackhole.png" class="blackhole" >-->
+<div id="canvas" class="blackhole" width="800" height="800"></div>
+<script src="js/jquery.js"></script>
+<script src="js/numeric.js"></script>
+<script src="js/black-hole.js"></script>
+<script>
+    BlackHole.blackHoleifyImage('canvas', './images/blackhole.png');
+</script>
+</body>
+</html>

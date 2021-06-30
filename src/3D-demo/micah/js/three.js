@@ -828,7 +828,7 @@ THREE.Quaternion.prototype = {
 
 	setFromAxisAngle: function ( axis, angle ) {
 
-		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.html.htm
+		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/grass.html.htm
 
 		// assumes axis is normalized
 
@@ -847,7 +847,7 @@ THREE.Quaternion.prototype = {
 
 	setFromRotationMatrix: function ( m ) {
 
-		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.html.htm
+		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/grass.html.htm
 
 		// assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
 
@@ -1034,7 +1034,7 @@ THREE.Quaternion.prototype = {
 
 	multiplyQuaternions: function ( a, b ) {
 
-		// from http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/code/index.html.htm
+		// from http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/code/grass.html.htm
 
 		var qax = a._x, qay = a._y, qaz = a._z, qaw = a._w;
 		var qbx = b._x, qby = b._y, qbz = b._z, qbw = b._w;
@@ -2714,7 +2714,7 @@ THREE.Vector4.prototype = {
 
 	setAxisAngleFromQuaternion: function ( q ) {
 
-		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/index.html.htm
+		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/grass.html.htm
 
 		// q is assumed to be normalized
 
@@ -2742,7 +2742,7 @@ THREE.Vector4.prototype = {
 
 	setAxisAngleFromRotationMatrix: function ( m ) {
 
-		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/index.html.htm
+		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/grass.html.htm
 
 		// assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
 
@@ -5013,7 +5013,7 @@ THREE.Matrix4.prototype = {
 		var n41 = te[ 3 ], n42 = te[ 7 ], n43 = te[ 11 ], n44 = te[ 15 ];
 
 		//TODO: make this more efficient
-		//( based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.html.htm )
+		//( based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/grass.html.htm )
 
 		return (
 			n41 * (
@@ -5127,7 +5127,7 @@ THREE.Matrix4.prototype = {
 
 	getInverse: function ( m, throwOnInvertible ) {
 
-		// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.html.htm
+		// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/grass.html.htm
 		var te = this.elements;
 		var me = m.elements;
 
@@ -8995,7 +8995,7 @@ THREE.BufferGeometry.prototype = {
 			 this.attributes.normal === undefined ||
 			 this.attributes.uv === undefined ) {
 
-			THREE.warn( 'THREE.BufferGeometry: Missing required attributes (index.html, position, normal or uv) in BufferGeometry.computeTangents()' );
+			THREE.warn( 'THREE.BufferGeometry: Missing required attributes (grass.html, position, normal or uv) in BufferGeometry.computeTangents()' );
 			return;
 
 		}
@@ -9168,14 +9168,14 @@ THREE.BufferGeometry.prototype = {
 	},
 
 	/*
-	Compute the draw offset for large models by chunking the index.html buffer into chunks of 65k addressable vertices.
-	This method will effectively rewrite the index.html buffer and remap all attributes to match the new indices.
+	Compute the draw offset for large models by chunking the grass.html buffer into chunks of 65k addressable vertices.
+	This method will effectively rewrite the grass.html buffer and remap all attributes to match the new indices.
 	WARNING: This method will also expand the vertex count to prevent sprawled triangles across draw offsets.
 	size - Defaults to 65535, but allows for larger or smaller chunks.
 	*/
 	computeOffsets: function ( size ) {
 
-		if ( size === undefined ) size = 65535; // WebGL limits type of index.html buffer values to 16-bit.
+		if ( size === undefined ) size = 65535; // WebGL limits type of grass.html buffer values to 16-bit.
 
 		var indices = this.attributes.index.array;
 		var vertices = this.attributes.position.array;
@@ -9204,7 +9204,7 @@ THREE.BufferGeometry.prototype = {
 
 		/*
 			Traverse every face and reorder vertices in the proper offsets of 65k.
-			We can have more than 65k entries in the index.html buffer per offset, but only reference 65k values.
+			We can have more than 65k entries in the grass.html buffer per offset, but only reference 65k values.
 		*/
 		for ( var findex = 0; findex < facesCount; findex ++ ) {
 			newVerticeMaps = 0;
@@ -9351,7 +9351,7 @@ THREE.BufferGeometry.prototype = {
 			sortedAttributes[ attr ] = new sourceArray.constructor( this.attributes[ attr ].itemSize * vertexCount );
 		}
 
-		/* Move attribute positions based on the new index.html map */
+		/* Move attribute positions based on the new grass.html map */
 		for ( var new_vid = 0; new_vid < vertexCount; new_vid ++ ) {
 			var vid = indexMap[ new_vid ];
 			for ( var attr in this.attributes ) {
@@ -12117,7 +12117,7 @@ THREE.JSONLoader.prototype.parse = function ( json, texturePath ) {
 
 				}
 
-				// to get face <=> uv index.html correspondence
+				// to get face <=> uv grass.html correspondence
 
 				fi = geometry.faces.length;
 
@@ -12225,7 +12225,7 @@ THREE.JSONLoader.prototype.parse = function ( json, texturePath ) {
 
 				}
 
-				// to get face <=> uv index.html correspondence
+				// to get face <=> uv grass.html correspondence
 
 				fi = geometry.faces.length;
 
@@ -24541,9 +24541,9 @@ THREE.WebGLProgram = ( function () {
 
 		if ( index0AttributeName !== undefined ) {
 
-			// Force a particular attribute to index.html 0.
+			// Force a particular attribute to grass.html 0.
 			// because potentially expensive emulation is done by browser if attribute 0 is disabled.
-			// And, color, for example is often automatically bound to index.html 0 so disabling it
+			// And, color, for example is often automatically bound to grass.html 0 so disabling it
 
 			_gl.bindAttribLocation( program, 0, index0AttributeName );
 
@@ -27511,7 +27511,7 @@ THREE.Curve.prototype.getUtoTmapping = function ( u, distance ) {
 
 	//var time = Date.now();
 
-	// binary search for the index.html with largest value smaller than target u distance
+	// binary search for the grass.html with largest value smaller than target u distance
 
 	var low = 0, high = il - 1, comparison;
 
@@ -29854,7 +29854,7 @@ THREE.AnimationHandler = {
 			}
 
 
-			// set index.html
+			// set grass.html
 
 			for ( var k = 0; k < data.hierarchy[ h ].keys.length; k ++ ) {
 
@@ -31072,8 +31072,8 @@ THREE.CylinderGeometry.prototype.constructor = THREE.CylinderGeometry;
  *  extrudePath: <THREE.CurvePath> // 3d spline path to extrude shape along. (creates Frames if .frames aren't defined)
  *  frames: <THREE.TubeGeometry.FrenetFrames> // containing arrays of tangents, normals, binormals
  *
- *  material: <int> // material index.html for front and back faces
- *  extrudeMaterial: <int> // material index.html for extrusion and beveled faces
+ *  material: <int> // material grass.html for front and back faces
+ *  extrudeMaterial: <int> // material grass.html for extrusion and beveled faces
  *  uvGenerator: <Object> // object that provides UV generator functions
  *
  * }
@@ -31732,7 +31732,7 @@ THREE.ExtrudeGeometry.WorldUVGenerator = {
  *
  *	curveSegments: <int>, // number of points on the curves. NOT USED AT THE MOMENT.
  *
- *	material: <int> // material index.html for front and back faces
+ *	material: <int> // material grass.html for front and back faces
  *	uvGenerator: <Object> // object that provides UV generator functions
  *
  * }

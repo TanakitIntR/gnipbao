@@ -7,7 +7,7 @@
     "easy-router": "^2.0.10"
   },
   "scripts": {
-    "test": "node app.js"
+    "test": "http-server -p 3006"
   },
   "repository": {
     "type": "git",
@@ -24,5 +24,9 @@
   "bugs": {
     "url": "https://github.com/Gnipbao/css3-test/issues"
   },
-  "homepage": "https://github.com/Gnipbao/css3-test#readme"
+  "homepage": "https://github.com/Gnipbao/css3-test#readme",
+  "devDependencies": {
+    "easy-router": "^2.2.4",
+    "http-server": "^0.9.0"
+  }
 }

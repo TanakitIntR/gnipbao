@@ -46,7 +46,7 @@ body {
   opacity: .85;
   background: lightblue;
   /*Creative Commons image from http://www.flickr.com/photos/37825670@N07/3562600154/sizes/z/in/photostream/ */
-  background: url(images/k6dbiLv.jpg) -115px -900px;
+  background: url(images/2.jpg) -115px -900px;
   background-repeat: no-repeat;
   backface-visibility: hidden;
 }
@@ -78,7 +78,7 @@ a {
 </head>
 
 <body>
-
+<div></div>
 <div style="text-align:center;clear:both;margin-bottom:80px;">
 </div>
 <ul id="level0" class='cube'>
@@ -164,7 +164,27 @@ a {
   <script src='js/TweenMax.min.js'></script>
 
   <script src="js/index.js"></script>
-
+  <script>
+    $("#file0").change(function(){
+      var objUrl = getObjectURL(this.files[0]) ;
+      console.log("objUrl = "+objUrl) ;
+      if (objUrl) {
+        $(".face").css("src", objUrl) ;
+      }
+    }) ;
+    //建立一個可存取到該file的url
+    function getObjectURL(file) {
+      var url = null ;
+      if (window.createObjectURL!=undefined) { // basic
+        url = window.createObjectURL(file) ;
+      } else if (window.URL!=undefined) { // mozilla(firefox)
+        url = window.URL.createObjectURL(file) ;
+      } else if (window.webkitURL!=undefined) { // webkit or chrome
+        url = window.webkitURL.createObjectURL(file) ;
+      }
+      return url ;
+    }
+  </script>
 </body>
 
 </html>

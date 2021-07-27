@@ -168,7 +168,7 @@ ui = {
 			"Masthead - YouTube Homepage takeover",
 			"Using DoubleClick’s technology, Sony Pictures created an in-banner driving game within the YouTube masthead, controlledthrough smartphone. Something that Q himself would certainly get excited about.</br></br><a target='_blank' href='http://www.richmediagallery.com/galleryDetail/?id=35285'>Try it here</a></br><a target='_blank' href='http://www.creativesandbox.com/case-study/sony-pictures-releasing-uk-skyfall-motorbike-chase'>See the full case study on the gallery here</a>",
 			"Skyfall Motorbike Chase",
-			"images/007.jpg",
+			"img/007.jpg",
 			"image",
 			"When users come to the YouTube homepage, they're in a grazing mode and looking for content that will entertain, educate or inform. The masthead format delivers massive reach and high interaction rates because it has the potential to captivate the users without interrupting their experience.</br></br><a target='_blank' href='http://www.youtube.com/yt/advertise/homepage-ads.html'>More information on YouTube advertising site</a>",
 			"",
@@ -192,11 +192,11 @@ ui = {
 			"Brand Channels - your YouTube home",
 			"Activision used a YouTube Brand Channel to create an awesome interactive trailer. It uses the same assets as the TV spots, but tells the story in a much richer, non-linear way by allowing users to interact with the video.</br></br><a target='_blank' href='http://www.youtube.com/user/CALLOFDUTY/custom'>Link to the experience</a></br><a target='_blank' href='http://www.creativesandbox.com/case-study/activision-publishing-call-of-duty-black-ops-ii'>See the full case study on the gallery here</a>",
 			"Call of Duty: Black Ops II",
-			"images/callofduty.jpg",
+			"img/callofduty.jpg",
 			"image",
 			"YouTube is the 2nd biggest search engine in the world and the world's 3rd largest site, so it's vital that you establish a rich presence on the site. Brand channels give you a wealth of options to create a bespoke and immersive home on YouTube that's truly representative of your brand.</br></br><a target='_blank' href='http://www.youtube.com/yt/advertise/channels.html'>More information on YouTube for advertisers</a>",
 			"",
-			"images/channels.jpg",
+			"img/channels.jpg",
 			"image"
 		);
 
@@ -206,7 +206,7 @@ ui = {
 			"Create beautiful Mobile Sites",
 			"Lexus’ primary challenge in Europe is to get noticed. Most premium automotive sites look the same, so to stand out they created a truly premium desktop and mobile site, giving a sense of seamless luxury.</br></br><a target='_blank' href='http://www.creativesandbox.com/case-study/lexus-lexus-creating-amazing'>See the full case study on the gallery here.</a>",
 			"Lexus Create Amazing",
-			"images/lexus.jpg",
+			"img/lexus.jpg",
 			"image",
 			"Increasingly, users are accessing the web from a mobile, therefore it's critical that your presence on the web is optimized for mobile devices. Studies have shown that 2/3rds of users will not return to a site that is not optimized for mobile.</br></br><a target='_blank' href='http://howtogomo.com>howtogomo.com</a>'",
 			"",
@@ -222,7 +222,7 @@ ui = {
 			"video",
 			"Since mobile devices are always on and always with us, consumers are increasingly multitasking with mobile even while engaged with other media. This is a great opportunity to design captivating experiences across devices.",
 			"",
-			"images/multiscreen.jpg",
+			"img/multiscreen.jpg",
 			"image"
 		);
 		
@@ -234,7 +234,7 @@ ui = {
 			"video",
 			"When mobile creatives can tap into a device’s GPS and harness information about  consumers’ real-time locations, they can not only for drive them into stores, but also stage much more compelling brand experiences.",
 			"",
-			"images/location.jpg",
+			"img/location.jpg",
 			"image"
 		);
 
@@ -246,7 +246,7 @@ ui = {
 			"video",
 			"Mobile is the first device that we reach for and the last one that we put down at night. Given their personal nature, mobile devices are a powerful tool to influence individual behaviours. Combined with social context and the right sharing mechanism, it can allow brands to build powerful communities.",
 			"",
-			"images/social.jpg",
+			"img/social.jpg",
 			"image"
 		);
 
@@ -256,11 +256,11 @@ ui = {
 			"Google Maps",
 			"To celebrate the idea that bridges ‘bring us together’, the Golden Gate National Park used the Google Maps API to let people add their own favorite bridges next to one another, and share the creation seamlessly across all social networks.</br></br><a target='_blank' href='http://www.creativesandbox.com/case-study/golden-gate-national-parks-conservancy-band-of-bridges'>See the full case study on the gallery here.</a>",
 			"Band of Bridges",
-			"images/band.jpg",
+			"img/band.jpg",
 			"image",
 			"With <a target='_blank' href='https://developers.google.com/maps/documentation/javascript/styling'>Styled Maps</a>, you can customize the base map layers to fit your needs. Change the base map colors to match your brand, draw attention to your data, or remove unwanted map features.</br></br><a target='_blank' href='https://developers.google.com/maps/customize'>Learn more</a>",
 			"Customize the look and feel",
-			"images/maps.jpg",
+			"img/maps.jpg",
 			"image"
 		);
 		
@@ -270,9 +270,9 @@ ui = {
 			"Nature Valley Trail View",
 			"http://www.youtube.com/v/MqZ5DYE-MhQ?version=3&enablejsapi=1",
 			"video",
-			"With the <a target='_blank' href='https://developers.google.com/maps/documentation/javascript/'>Google Maps JavaScript API v3</a>, you can access our Street View global imagery database or add your own images (such as the inside of a building) to use in your apps. From the streets of Tokyo to the penguins of Antarctica, Street View is available on seven continents.",
+			"With the <a target='_blank' href='https://developers.google.com/maps/documentation/javascript/'>Google Maps JavaScript API v3</a>, you can access our Street View global imagery database or add your own img (such as the inside of a building) to use in your apps. From the streets of Tokyo to the penguins of Antarctica, Street View is available on seven continents.",
 			"Display your own Street View imagery",
-			"images/streetview.jpg",
+			"img/streetview.jpg",
 			"image"
 		);
 

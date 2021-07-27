@@ -84,7 +84,7 @@ AEROTWIST.ReactiveBall = (function() {
   function createObjects() {
 
     // first create the environment map
-    var path = "images/",
+    var path = "img/",
         format = '.jpg',
         urls = [
           path + 'posx' + format, path + 'negx' + format,
@@ -121,7 +121,7 @@ AEROTWIST.ReactiveBall = (function() {
     planeGeometry = new THREE.PlaneGeometry( 400, 400, 1 );
     planeMaterial = new THREE.MeshBasicMaterial({
       color: 0xFFFFFF,
-      map: THREE.ImageUtils.loadTexture("images/floor.png"),
+      map: THREE.ImageUtils.loadTexture("img/floor.png"),
       transparent: true
     });
 

@@ -1097,7 +1097,7 @@ function curves(red, green, blue) {
 // src/filters\adjust\denoise.js
 /**
  * @filter         Denoise
- * @description    Smooths over grainy noise in dark images using an 9x9 box filter
+ * @description    Smooths over grainy noise in dark img using an 9x9 box filter
  *                 weighted by color intensity, similar to a bilateral filter.
  * @param exponent The exponent of the color intensity difference, should be greater
  *                 than zero. A value of zero just gives an 9x9 box blur and high values
@@ -1512,7 +1512,7 @@ function tiltShift(startX, startY, endX, endY, blurRadius, gradientRadius) {
                 float weight = 1.0 - abs(percent);\
                 vec4 sample = texture2D(texture, texCoord + delta / texSize * percent * radius);\
                 \
-                /* switch to pre-multiplied alpha to correctly blur transparent images */\
+                /* switch to pre-multiplied alpha to correctly blur transparent img */\
                 sample.rgb *= sample.a;\
                 \
                 color += sample * weight;\
@@ -1575,7 +1575,7 @@ function triangleBlur(radius) {
                 float weight = 1.0 - abs(percent);\
                 vec4 sample = texture2D(texture, texCoord + delta * percent);\
                 \
-                /* switch to pre-multiplied alpha to correctly blur transparent images */\
+                /* switch to pre-multiplied alpha to correctly blur transparent img */\
                 sample.rgb *= sample.a;\
                 \
                 color += sample * weight;\
@@ -1629,7 +1629,7 @@ function zoomBlur(centerX, centerY, strength) {
                 float weight = 4.0 * (percent - percent * percent);\
                 vec4 sample = texture2D(texture, texCoord + toCenter * percent * strength / texSize);\
                 \
-                /* switch to pre-multiplied alpha to correctly blur transparent images */\
+                /* switch to pre-multiplied alpha to correctly blur transparent img */\
                 sample.rgb *= sample.a;\
                 \
                 color += sample * weight;\

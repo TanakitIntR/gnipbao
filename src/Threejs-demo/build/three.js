@@ -27450,7 +27450,7 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 		if ( image.width > maxSize || image.height > maxSize ) {
 
-			// Warning: Scaling through the canvas will only work with images that use
+			// Warning: Scaling through the canvas will only work with img that use
 			// premultiplied alpha.
 
 			var scale = maxSize / Math.max( image.width, image.height );

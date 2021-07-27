@@ -7,7 +7,7 @@
     "easy-router": "^2.0.10"
   },
   "scripts": {
-    "test": "http-server -p 3006"
+    "test": "http-server -p 3030"
   },
   "repository": {
     "type": "git",

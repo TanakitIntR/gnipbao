@@ -3,11 +3,11 @@ var texture = {};
 var textureOK = {};
 
 function initTextures() {
-  loadTexture('jellyfish', 'images/jellyfish.png');
-  loadTexture('luminescence', 'images/luminescence.png');
+  loadTexture('jellyfish', 'img/jellyfish.png');
+  loadTexture('luminescence', 'img/luminescence.png');
 
   for (var i=1; i <= 32; i++) {
-    loadTexture('caustics'+i, 'images/caustics/caustics7.'+pad2(i-1)+'.jpg');
+    loadTexture('caustics'+i, 'img/caustics/caustics7.'+pad2(i-1)+'.jpg');
   }
 }
 

@@ -1411,7 +1411,7 @@ var REGEXP_PRECEDER_PATTERN = '(?:^^\\.?|[+-]|[!=]=?=?|\\#|%=?|&&?=?|\\(|\\*=?|[
    */
   function prettyPrintOne(sourceCodeHtml, opt_langExtension, opt_numberLines) {
     var container = document.createElement('pre');
-    // This could cause images to load and onload listeners to fire.
+    // This could cause img to load and onload listeners to fire.
     // E.g. <img onerror="alert(1337)" src="nosuchimage.png">.
     // We assume that the inner HTML is from a trusted source.
     container.innerHTML = sourceCodeHtml;

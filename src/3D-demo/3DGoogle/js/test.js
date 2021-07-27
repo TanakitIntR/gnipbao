@@ -130,7 +130,7 @@ CubeApp.prototype = {
 		this.close_ok = false;
 
 		this.iframe.show();
-		this.iframe[0].setAttribute('src', "http://imgs.google.com/m/search?q="+this.qtext.val());
+		this.iframe[0].setAttribute('src', "http://img.google.com/m/search?q="+this.qtext.val());
 
 		if (!this.playing)
 			this.doAnimation();

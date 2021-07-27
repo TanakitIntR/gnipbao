@@ -6780,7 +6780,7 @@ body {
 }
 
 .carbonad #azcarbon > img {
-    display: none; /* hide what I assume are tracking images */
+    display: none; /* hide what I assume are tracking img */
 }
 
 @media (min-width: 768px) {
@@ -8057,7 +8057,7 @@ body {
 }
 
 .carbonad #azcarbon > img {
-    display: none; /* hide what I assume are tracking images */
+    display: none; /* hide what I assume are tracking img */
 }
 
 @media (min-width: 768px) {

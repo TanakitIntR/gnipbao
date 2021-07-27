@@ -48,7 +48,7 @@ SOFTWARE.
     var isDataUriRegex = /^data:/;
 
     /**
-     * Asynchronously loads the given image URL.  Attempts to load cross-origin images using CORS.
+     * Asynchronously loads the given image URL.  Attempts to load cross-origin img using CORS.
      *
      * @param {String} url The source of the image.
      * @param {Function} success A function that will be called with an Image object

@@ -143,7 +143,7 @@ body {
 		});
 		camera.z  = -10000;
 		camera.py = 0;
-		// ---- create imgs ----
+		// ---- create img ----
 		for (var i = 0, img; img = json.imgdata[i++];) {
 			diapo.push(
 				new Diapo(
@@ -222,7 +222,7 @@ body {
 			);
 		}
 	}
-	/* ==== imgs draw ==== */
+	/* ==== img draw ==== */
 	Diapo.prototype.draw = function () {
 		// ---- visibility ----
 		this.pc.projection();

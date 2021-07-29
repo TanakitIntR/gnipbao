@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>HTML5 3D正方体旋转动画演示地址</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/prefixfree.min.js"></script>
+    <script src="js/jquery-3.0.0.js"></script>
+</head>
+
+<body>
+
+<div class="space3d">
+
+    <div class="_3dbox">
+      <div class="_3dface _3dface--front"></div>
+      <div class="_3dface _3dface--top"></div>
+      <div class="_3dface _3dface--bottom"></div>
+      <div class="_3dface _3dface--left"></div>
+      <div class="_3dface _3dface--right"></div>
+      <div class="_3dface _3dface--back"></div>
+    </div>
+
+</div>
+<div class="options">
+    <input type="radio" checked id="radio-front" name="select-face"/>
+    <input type="radio" id="radio-left" name="select-face"/>
+    <input type="radio" id="radio-right" name="select-face"/>
+    <input type="radio" id="radio-top" name="select-face"/>
+    <input type="radio" id="radio-bottom" name="select-face"/>
+    <input type="radio" id="radio-back" name="select-face"/>
+</div>
+<script>
+(function(){
+    init();
+//    animate();
+    function init(){
+        var box = $('._3dbox');
+        $('#radio-front').on('click', function() {
+            box.removeClass().addClass('_3dbox front');
+        });
+        $('#radio-left').on('click', function() {
+            box.removeClass().addClass('_3dbox left');
+        });
+        $('#radio-right').on('click', function() {
+            box.removeClass().addClass('_3dbox right');
+        });
+        $('#radio-top').on('click', function() {
+            box.removeClass().addClass('_3dbox top');
+        });
+        $('#radio-bottom').on('click', function() {
+            box.removeClass().addClass('_3dbox bottom');
+        });
+        $('#radio-back').on('click', function() {
+            box.removeClass().addClass('_3dbox back');
+        });
+    };
+    function animate() {
+        requestAnimationFrame( animate );
+
+    }
+
+
+
+})()
+</script>
+</body>
+</html>

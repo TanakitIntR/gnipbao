@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const base = "src/";
-const sourcePrefix = "https://github.com/Gnipbao/css3-test/tree/gh-pages/";
+const sourcePrefix = "https://github.com/gnipbao/h5-test/tree/gh-pages/";
 const files = fs.readdirSync(base);
 let html = fs.readFileSync("./menu.html").toString();
 let ul_html = '\n<div class="view">';

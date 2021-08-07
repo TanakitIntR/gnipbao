@@ -1,17 +1,14 @@
 {
-  "name": "css3-test",
-  "version": "0.0.1",
+  "name": "h5-test",
+  "version": "0.0.2",
   "description": "This is a collection of HTML5 and CSS3 cool effects from internet.",
   "main": "app.js",
-  "dependencies": {
-    "easy-router": "^2.0.10"
-  },
   "scripts": {
-    "test": "http-server -p 3006"
+    "test": "node app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Gnipbao/css3-test.git"
+    "url": "git+https://github.com/gnipbao/h5-test.git"
   },
   "keywords": [
     "html5",
@@ -22,11 +19,12 @@
   "author": "Gnip",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Gnipbao/css3-test/issues"
+    "url": "https://github.com/gnipbao/h5-test.git/issues"
   },
-  "homepage": "https://github.com/Gnipbao/css3-test#readme",
+  "homepage": "https://gnipbao.github.io/h5-test/menu.html",
   "devDependencies": {
-    "easy-router": "^2.2.4",
-    "http-server": "^0.9.0"
+    "chalk": "^2.3.0",
+    "open": "^0.0.5",
+    "serve": "^6.4.9"
   }
 }

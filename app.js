@@ -13,4 +13,3 @@ const server = serve(__dirname, {
 
 opn(url);
 Log(chalk.green(`server run at 127.0.0.1:${PORT}`));
-

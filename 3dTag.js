@@ -2,7 +2,7 @@
 
 var tagEle = "querySelectorAll" in document ? document.querySelectorAll(".tag") : getClass("tag"),
     paper = "querySelectorAll" in document ? document.querySelector(".tagBall") : getClass("tagBall")[0];
-RADIUS = 220,
+    RADIUS = 220,
     fallLength = 500,
     tags = [],
     angleX = Math.PI / 500,
@@ -24,7 +24,7 @@ function getClass(className) {
     return classEle;
 }
 
-function innit() {
+function init() {
     for (var i = 0; i < tagEle.length; i++) {
         var a, b;
         var k = -1 + (2 * (i + 1) - 1) / tagEle.length;
@@ -54,20 +54,17 @@ function animate() {
         })
     }, 17)
 }
+var moveAction = function(event){
+    var x = event.clientX - EX - CX;
+    var y = event.clientY - EY - CY;
+    angleY = x * 0.0001;
+    angleX = y * 0.0001;
+};
+
 if ("addEventListener" in window) {
-    paper.addEventListener("mousemove", function(event) {
-        var x = event.clientX - EX - CX;
-        var y = event.clientY - EY - CY;
-        angleY = x * 0.0001;
-        angleX = y * 0.0001;
-    });
+    paper.addEventListener("mousemove", moveAction);
 } else {
-    paper.attachEvent("onmousemove", function(event) {
-        var x = event.clientX - EX - CX;
-        var y = event.clientY - EY - CY;
-        angleY = x * 0.0001;
-        angleX = y * 0.0001;
-    });
+    paper.attachEvent("onmousemove", moveAction);
 }
 
 function rotateX() {
@@ -110,5 +107,5 @@ tag.prototype = {
         this.ele.style.top = this.y + CY - this.ele.offsetHeight / 2 + "px";
     }
 }
-innit();
+init();
 animate();

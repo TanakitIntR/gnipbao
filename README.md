@@ -11,7 +11,7 @@ npm install
 npm run test
 ```
 Then visit http://127.0.0.1:3006/menu.html in your browser.
-## preview
-online demo.
 
- [here](http://gnipbao.github.io/h5-test/menu.html)
+### preview
+
+ [online demo](http://gnipbao.github.io/h5-test/menu.html)
